@@ -55,9 +55,9 @@ export const generateTripPoint = () => {
     destination: getRandomItemFromArray(TRIP_DESTINATIONS),
     startDate,
     endDate,
-    price: getRandomInteger(1, 20000),
+    price: getRandomInteger(1, 2000),
     isFavorite: !!getRandomInteger(0, 1),
-    offerIds: getRandomItemFromArray(OFFERS).id,
+    offerIds: [getRandomItemFromArray(OFFERS).id],
     photos: getPhotos(),
     description: getDescription(),
   };
