@@ -33,13 +33,13 @@ const getTripDate = () => {
   const maxStartDaysGap = 60;
   const maxEndDaysGap = 3;
   const maxHour = 5;
+  const maxMinute = 60;
 
-  const randomHour = getRandomInteger(0, maxHour);
   const daysStartGap = getRandomInteger(0, maxStartDaysGap);
   const daysEndGap = getRandomInteger(0, maxEndDaysGap);
 
-  const startDate = dayjs().add(daysStartGap, `day`).toDate();
-  const endDate = dayjs(startDate).add(daysEndGap, `day`).add(randomHour, `hour`).toDate();
+  const startDate = dayjs().add(daysStartGap, `day`).add(getRandomInteger(0, maxHour), `hour`).add(getRandomInteger(0, maxMinute), `minute`).toDate();
+  const endDate = dayjs(startDate).add(daysEndGap, `day`).add(getRandomInteger(0, maxHour), `hour`).add(getRandomInteger(0, maxMinute), `minute`).toDate();
 
   return {
     startDate,
@@ -57,7 +57,7 @@ export const generateTripPoint = () => {
     endDate,
     price: getRandomInteger(1, 20000),
     isFavorite: !!getRandomInteger(0, 1),
-    offers: getRandomItemFromArray(OFFERS),
+    offerIds: getRandomItemFromArray(OFFERS).id,
     photos: getPhotos(),
     description: getDescription(),
   };
