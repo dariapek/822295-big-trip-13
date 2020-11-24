@@ -8,12 +8,16 @@ import {getCreateFormTemplate} from './view/create-form';
 import {getEditTemplate} from './view/edit-form';
 import {getPointTemplate} from './view/point';
 
-const EVENT_COUNT = 3;
+import {generateTripPoint} from './mock/trip-point';
+
+const EVENT_COUNT = 15;
 
 const body = document.querySelector(`.page-body`);
 const main = body.querySelector(`.trip-main`);
 const controls = main.querySelector(`.trip-controls`);
 const tripEvents = body.querySelector(`.trip-events`);
+
+const tripPoints = new Array(EVENT_COUNT).fill().map(generateTripPoint);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -35,7 +39,7 @@ render(eventsList, getCreateFormTemplate(), `beforeend`);
 render(eventsList, getEditTemplate(), `beforeend`);
 
 for (let i = 0; i < EVENT_COUNT; i++) {
-  render(eventsList, getPointTemplate(), `beforeend`);
+  render(eventsList, getPointTemplate(tripPoints[i]), `beforeend`);
 }
 
 
