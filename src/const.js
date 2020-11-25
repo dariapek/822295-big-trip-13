@@ -1,35 +1,35 @@
 export const TRIP_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 
-export const TRIP_DESTINATIONS = [`Geneva`, `London`, `St Petersburg`, `Berlin`, `Roma`, `Kiev`, `Paris`, `Budapest`, `Vienna`, `Milan`];
+export const TRIP_DESTINATIONS = [`Geneva`, `London`, `St Petersburg`, `Berlin`, `Roma`, `Kiev`, `Paris`, `Budapest`, `Vienna`, `Milan`, `Chamonix`];
 
 export const OFFERS = [
   {
-    id: 1,
+    id: `event-offer-luggage-1`,
     title: `Add luggage`,
     price: 50,
   },
   {
-    id: 2,
+    id: `event-offer-comfort-1`,
     title: `Switch to comfort`,
     price: 80,
   },
   {
-    id: 3,
+    id: `event-offer-meal-1`,
     title: `Add meal`,
     price: 15,
   },
   {
-    id: 4,
+    id: `event-offer-seats-1`,
     title: `Choose seats`,
     price: 5,
   },
   {
-    id: 5,
+    id: `event-offer-train-1`,
     title: `Travel by train`,
     price: 40,
   },
   {
-    id: 6,
+    id: `event-offer-uber-1`,
     title: `Order Uber`,
     price: 20,
   },
