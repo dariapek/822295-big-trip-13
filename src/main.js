@@ -4,7 +4,6 @@ import {getNavigation} from './view/navigation';
 import {getFiltersList} from './view/filters';
 import {getSortListTemplate} from './view/sort-list';
 import {getPointsListTemplate} from './view/points-list';
-import {getCreateFormTemplate} from './view/create-form';
 import {getEditTemplate} from './view/edit-form';
 import {getPointTemplate} from './view/point';
 
@@ -35,10 +34,11 @@ render(tripEvents, getPointsListTemplate(), `beforeend`);
 
 const eventsList = tripEvents.querySelector(`.trip-events__list`);
 
-render(eventsList, getCreateFormTemplate(), `beforeend`);
+const firstTripPoint = 0;
 render(eventsList, getEditTemplate(), `beforeend`);
+render(eventsList, getEditTemplate(tripPoints[firstTripPoint]), `beforeend`);
 
-for (let i = 0; i < EVENT_COUNT; i++) {
+for (let i = 1; i < EVENT_COUNT; i++) {
   render(eventsList, getPointTemplate(tripPoints[i]), `beforeend`);
 }
 
