@@ -26,7 +26,7 @@ const getDuration = (firstDate, secondDate) => {
 };
 
 const getOfferItem = (offerId) => {
-  const offer = OFFERS.find((offer) => offer.id === offerId);
+  const offer = OFFERS.find((offerItem) => offerItem.id === offerId);
 
   return `<li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>
