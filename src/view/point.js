@@ -1,8 +1,7 @@
 import dayjs from "dayjs";
 
+import {formatDate} from "../utils";
 import {OFFERS} from "../const";
-
-const formatDate = (date, template) => dayjs(date).format(template);
 
 const getDuration = (firstDate, secondDate) => {
   const minute = 60000;
