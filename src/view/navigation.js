@@ -7,7 +7,6 @@ const getNavigationTemplate = (navigationData) => {
 };
 
 export const getNavigation = (navigationData) => {
-  console.log(navigationData);
   const navigationTemplate = getNavigationTemplate(navigationData);
 
   return `<h2 class="visually-hidden">Switch trip view</h2>
