@@ -30,13 +30,15 @@ const getDestinationSectionTemplate = (description, photos) => {
 const getOffersTemplate = (checkedOffers = []) => {
 
   return OFFERS.map(({id, title, price}) => {
+    const isEditForm = !!checkedOffers.length;
     const randomChecked = getRandomInteger(0, 1) ? `checked` : ``;
     const checkedOffer = checkedOffers.includes(id) ? `checked` : ``;
-    const isChecked = checkedOffers.length ? checkedOffer : randomChecked;
+    const isChecked = isEditForm ? checkedOffer : randomChecked;
+    const idPrefix = isEditForm ? `edit` : `create`;
 
     return `<div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="${id}" type="checkbox" name="event-offer-comfort" ${isChecked}>
-              <label class="event__offer-label" for="${id}">
+              <input class="event__offer-checkbox  visually-hidden" id="${id}${idPrefix}" type="checkbox" name="event-offer-comfort" ${isChecked}>
+              <label class="event__offer-label" for="${id}${idPrefix}">
                 <span class="event__offer-title">${title}</span>
                 &plus;&euro;&nbsp;
                 <span class="event__offer-price">${price}</span>
