@@ -30,9 +30,10 @@ const getDestinationSectionTemplate = (description, photos) => {
 const getOffersTemplate = () => {
 
   return OFFERS.map(({id, title, price}) => {
+    const isChecked = getRandomInteger(0, 1) ? `checked` : ``;
 
     return `<div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="${id}" type="checkbox" name="event-offer-comfort" checked>
+              <input class="event__offer-checkbox  visually-hidden" id="${id}" type="checkbox" name="event-offer-comfort" ${isChecked}>
               <label class="event__offer-label" for="${id}">
                 <span class="event__offer-title">${title}</span>
                 &plus;&euro;&nbsp;
