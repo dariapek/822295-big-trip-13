@@ -28,9 +28,4 @@ export const OFFERS = [
     title: `Travel by train`,
     price: 40,
   },
-  {
-    id: `event-offer-uber-1`,
-    title: `Order Uber`,
-    price: 20,
-  },
 ];
