@@ -9,6 +9,8 @@ import {getPointTemplate} from './view/point';
 
 import {generateTripPoint} from './mock/trip-point-mock';
 import {getSortData} from './mock/sort-mock';
+import {getFilterData} from './mock/filters-mock';
+import {getNavigationData} from './mock/navigation-mock';
 
 const EVENT_COUNT = 15;
 
@@ -27,10 +29,12 @@ render(main, getInformationTemplate(), `afterbegin`);
 
 const tripInfo = body.querySelector(`.trip-info`);
 const sortData = getSortData();
+const filtersData = getFilterData();
+const navigationsData = getNavigationData();
 
 render(tripInfo, getTotalPriceTemplate(), `beforeend`);
-render(controls, getNavigation(), `afterbegin`);
-render(controls, getFiltersList(), `beforeend`);
+render(controls, getNavigation(navigationsData), `afterbegin`);
+render(controls, getFiltersList(filtersData), `beforeend`);
 render(tripEvents, getSortListTemplate(sortData), `beforeend`);
 render(tripEvents, getPointsListTemplate(), `beforeend`);
 
