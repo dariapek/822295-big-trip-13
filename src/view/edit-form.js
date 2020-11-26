@@ -27,10 +27,12 @@ const getDestinationSectionTemplate = (description, photos) => {
            </section>` : ``;
 };
 
-const getOffersTemplate = () => {
+const getOffersTemplate = (checkedOffers = []) => {
 
   return OFFERS.map(({id, title, price}) => {
-    const isChecked = getRandomInteger(0, 1) ? `checked` : ``;
+    const randomChecked = getRandomInteger(0, 1) ? `checked` : ``;
+    const checkedOffer = checkedOffers.includes(id) ? `checked` : ``;
+    const isChecked = checkedOffers.length ? checkedOffer : randomChecked;
 
     return `<div class="event__offer-selector">
               <input class="event__offer-checkbox  visually-hidden" id="${id}" type="checkbox" name="event-offer-comfort" ${isChecked}>
@@ -69,8 +71,9 @@ export const getEditTemplate = (point = {}) => {
     startDate,
     endDate,
     price,
-    description,
+    offerIds,
     photos,
+    description,
   } = point;
   const isCreateForm = !Object.keys(point).length;
   const tripType = isCreateForm ? TRIP_TYPES[getRandomInteger(0, TRIP_TYPES.length - 1)] : type;
@@ -79,7 +82,7 @@ export const getEditTemplate = (point = {}) => {
   const formattedStartDate = isCreateForm ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
   const formattedEndDate = isCreateForm ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
   const resetButtonText = isCreateForm ? `Cancel` : `Delete`;
-  const offersTemplate = getOffersTemplate();
+  const offersTemplate = getOffersTemplate(isCreateForm ? [] : offerIds);
   const destinationSectionTemplate = getDestinationSectionTemplate(description, photos);
 
   return `<li class="trip-events__item">
