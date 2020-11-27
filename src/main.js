@@ -40,11 +40,11 @@ render(tripEvents, getPointsListTemplate(), `beforeend`);
 
 const eventsList = tripEvents.querySelector(`.trip-events__list`);
 
-const firstTripPoint = 0;
+const firstTripPointIndex = 0;
 render(eventsList, getEditTemplate(), `beforeend`);
-render(eventsList, getEditTemplate(tripPoints[firstTripPoint]), `beforeend`);
+render(eventsList, getEditTemplate(tripPoints[firstTripPointIndex]), `beforeend`);
 
-for (let i = 1; i < EVENT_COUNT; i++) {
+for (let i = firstTripPointIndex + 1; i < EVENT_COUNT; i++) {
   render(eventsList, getPointTemplate(tripPoints[i]), `beforeend`);
 }
 
