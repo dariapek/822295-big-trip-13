@@ -65,7 +65,7 @@ const getDestinationOptionsTemplate = () => {
   }).join(``);
 };
 
-export const getEditTemplate = (point = {}) => {
+export const getEditTemplate = (point = {}, defaultTripType = TRIP_TYPES[0]) => {
   const {
     type,
     destination,
@@ -77,7 +77,7 @@ export const getEditTemplate = (point = {}) => {
     description,
   } = point;
   const isCreateForm = !Object.keys(point).length;
-  const tripType = isCreateForm ? TRIP_TYPES[getRandomInteger(0, TRIP_TYPES.length - 1)] : type;
+  const tripType = isCreateForm ? defaultTripType : type;
   const eventTypeItemsTemplate = getEventTypeListItemTemplate();
   const destinationItemsTemplate = getDestinationOptionsTemplate();
   const formattedStartDate = isCreateForm ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
