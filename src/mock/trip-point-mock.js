@@ -42,6 +42,14 @@ const getTripDate = () => {
   };
 };
 
+const getRandomOffersId = (offers) => {
+  const maxArrayLength = 3;
+  const minCount = getRandomInteger(0, 1);
+  const maxCount = getRandomInteger(minCount, offers.length - maxArrayLength + minCount);
+
+  return offers.map((offer) => offer.id).splice(minCount, maxCount);
+};
+
 export const generateTripPoint = () => {
   const {startDate, endDate} = getTripDate();
 
@@ -52,7 +60,7 @@ export const generateTripPoint = () => {
     endDate,
     price: getRandomInteger(1, 2000),
     isFavorite: !!getRandomInteger(0, 1),
-    offerIds: [getRandomItemFromArray(OFFERS).id],
+    offerIds: getRandomOffersId(OFFERS),
     photos: getPhotos(),
     description: getDescription(),
   };
