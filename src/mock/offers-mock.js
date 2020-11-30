@@ -2,7 +2,7 @@ import {getRandomInteger} from "../utils";
 
 import {OFFERS} from "../const";
 
-export const generateOffers = (minOffersCount, maxOffersCount) => {
+export const getOffers = (minOffersCount, maxOffersCount) => {
   const randomInteger = getRandomInteger(minOffersCount, maxOffersCount);
 
   // это сделано чтобы иногда была нудевая длина возвращаемого массива
