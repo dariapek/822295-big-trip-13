@@ -1,5 +1,4 @@
 import {formatDate, getRandomInteger} from "../utils";
-
 import {TRIP_TYPES, TRIP_DESTINATIONS, OFFERS} from "../const";
 
 const getPhotosTemplate = (photos) => {
@@ -27,9 +26,9 @@ const getDestinationSectionTemplate = (description, photos) => {
            </section>` : ``;
 };
 
-const getOffersTemplate = (checkedOffers = []) => {
+const getOffersTemplate = (offers, checkedOffers = []) => {
 
-  return OFFERS.map(({id, title, price}) => {
+  return offers.map(({id, title, price}) => {
     const isEditForm = !!checkedOffers.length;
     const randomChecked = getRandomInteger(0, 1) ? `checked` : ``;
     const checkedOffer = checkedOffers.includes(id) ? `checked` : ``;
@@ -84,7 +83,7 @@ export const getEditTemplate = (point = {}) => {
   const formattedStartDate = isCreateForm ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
   const formattedEndDate = isCreateForm ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
   const resetButtonText = isCreateForm ? `Cancel` : `Delete`;
-  const offersTemplate = getOffersTemplate(isCreateForm ? [] : offerIds);
+  const offersTemplate = getOffersTemplate(OFFERS, isCreateForm ? [] : offerIds);
   const destinationSectionTemplate = getDestinationSectionTemplate(description, photos);
   const idPrefix = isCreateForm ? `1` : `2`;
 
