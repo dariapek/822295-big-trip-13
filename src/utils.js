@@ -14,3 +14,15 @@ export const getRandomItemFromArray = (array) => {
 
   return array[randomInteger];
 };
+
+export const getRandomElements = (items, randomItemsCount) => {
+  const elements = items.slice();
+
+  return new Array(randomItemsCount).fill().map(() => {
+    const randomIndex = getRandomInteger(0, elements.length - 1);
+    const randomElement = elements[randomIndex];
+    elements.splice(randomIndex, 1);
+
+    return randomElement;
+  });
+};
