@@ -8,3 +8,9 @@ export const getRandomInteger = (a = 0, b = 1) => {
 };
 
 export const formatDate = (date, template) => dayjs(date).format(template);
+
+export const getRandomItemFromArray = (array) => {
+  const randomInteger = getRandomInteger(0, array.length - 1);
+
+  return array[randomInteger];
+};

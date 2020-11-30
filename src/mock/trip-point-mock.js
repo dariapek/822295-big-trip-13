@@ -23,12 +23,6 @@ const getPhotos = () => {
   return new Array(randomInteger).fill().map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
 };
 
-const getRandomItemFromArray = (array) => {
-  const randomInteger = getRandomInteger(0, array.length - 1);
-
-  return array[randomInteger];
-};
-
 const getTripDate = () => {
   const daysStartGap = getRandomInteger(0, TRIP_DATE.MAX_START_DAYS_GAP);
   const daysEndGap = getRandomInteger(0, TRIP_DATE.MAX_END_DAYS_GAP);
