@@ -46,7 +46,7 @@ export const getPointTemplate = (point) => {
   const favoriteClassName = isFavorite ? `event__favorite-btn--active` : ``;
 
 
-  const offerTemplates = offerIds.map((id) => getOfferItem(id)).join();
+  const offerTemplates = offerIds.map((id) => getOfferItem(id)).join(``);
 
   return `<li class="trip-events__item">
               <div class="event">
