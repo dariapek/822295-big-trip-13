@@ -29,7 +29,7 @@ const getDestinationSectionTemplate = (description, photos) => {
 const getOffersTemplate = (offers, checkedOffers = []) => {
 
   return offers.map(({id, title, price}) => {
-    const isEditForm = !!checkedOffers.length;
+    const isEditForm = Boolean(checkedOffers.length);
     const randomChecked = getRandomInteger(0, 1) ? `checked` : ``;
     const checkedOffer = checkedOffers.includes(id) ? `checked` : ``;
     const isChecked = isEditForm ? checkedOffer : randomChecked;
