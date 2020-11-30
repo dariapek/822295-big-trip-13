@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import {getRandomInteger, getRandomItemFromArray} from "../utils";
+import {getRandomInteger, getRandomItemFromArray, getRandomElements} from "../utils";
 import {
   OFFERS,
   TRIP_DESTINATIONS,
@@ -9,14 +9,6 @@ import {
   MAX_PHOTO,
   TRIP_DATE,
 } from "../const";
-
-const getDescription = (descriptions) => {
-  const randomElement = getRandomInteger(0, descriptions.length - 1);
-
-  return descriptions
-    .slice(randomElement)
-    .join(``);
-};
 
 const getPhotos = () => {
   const randomInteger = getRandomInteger(1, MAX_PHOTO);
@@ -45,12 +37,6 @@ const getTripDate = () => {
   };
 };
 
-const getRandomOffersId = (offers) => {
-  const beginCount = getRandomInteger(0, offers.length - 3);
-  const endCount = getRandomInteger(beginCount, offers.length - 2);
-
-  return offers.map((offer) => offer.id).slice(beginCount, endCount);
-};
 
 export const generateTripPoint = () => {
   const {startDate, endDate} = getTripDate();
@@ -62,8 +48,8 @@ export const generateTripPoint = () => {
     endDate,
     price: getRandomInteger(1, 2000),
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    offerIds: getRandomOffersId(OFFERS),
+    offerIds: getRandomElements(OFFERS, getRandomInteger(0, 2)).map((offer) => offer.id),
     photos: getPhotos(),
-    description: getDescription(DESCRIPTIONS),
+    description: getRandomElements(DESCRIPTIONS, getRandomInteger(0, 5)).join(``),
   };
 };
