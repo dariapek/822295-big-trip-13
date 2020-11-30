@@ -46,9 +46,9 @@ const getOffersTemplate = (offers, checkedOffers = []) => {
   }).join(``);
 };
 
-const getEventTypeListItemTemplate = () => {
+const getEventTypeListItemTemplate = (tripTypes) => {
 
-  return TRIP_TYPES.map((type) => {
+  return tripTypes.map((type) => {
     const lowerCaseType = type.toLowerCase();
 
     return `<div class="event__type-item">
@@ -58,9 +58,9 @@ const getEventTypeListItemTemplate = () => {
   }).join(``);
 };
 
-const getDestinationOptionsTemplate = () => {
+const getDestinationOptionsTemplate = (destinations) => {
 
-  return TRIP_DESTINATIONS.map((destination) => {
+  return destinations.map((destination) => {
     return `<option value="${destination}"></option>`;
   }).join(``);
 };
@@ -78,8 +78,8 @@ export const getEditTemplate = (point = {}, defaultTripType = TRIP_TYPES[0]) => 
   } = point;
   const isCreateForm = !Object.keys(point).length;
   const tripType = isCreateForm ? defaultTripType : type;
-  const eventTypeItemsTemplate = getEventTypeListItemTemplate();
-  const destinationItemsTemplate = getDestinationOptionsTemplate();
+  const eventTypeItemsTemplate = getEventTypeListItemTemplate(TRIP_TYPES);
+  const destinationItemsTemplate = getDestinationOptionsTemplate(TRIP_DESTINATIONS);
   const formattedStartDate = isCreateForm ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
   const formattedEndDate = isCreateForm ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
   const resetButtonText = isCreateForm ? `Cancel` : `Delete`;
