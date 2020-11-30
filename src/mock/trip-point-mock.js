@@ -1,8 +1,14 @@
 import dayjs from "dayjs";
 
-import {getRandomInteger} from "../utils";
-
-import {OFFERS, TRIP_DESTINATIONS, TRIP_TYPES, DESCRIPTIONS} from "../const";
+import {getRandomInteger, getRandomItemFromArray} from "../utils";
+import {
+  OFFERS,
+  TRIP_DESTINATIONS,
+  TRIP_TYPES,
+  DESCRIPTIONS,
+  MAX_PHOTO,
+  TRIP_DATE,
+} from "../const";
 
 const getDescription = () => {
 
@@ -12,7 +18,6 @@ const getDescription = () => {
 };
 
 const getPhotos = () => {
-  const MAX_PHOTO = 6;
   const randomInteger = getRandomInteger(1, MAX_PHOTO);
 
   return new Array(randomInteger).fill().map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
@@ -25,16 +30,19 @@ const getRandomItemFromArray = (array) => {
 };
 
 const getTripDate = () => {
-  const maxStartDaysGap = 60;
-  const maxEndDaysGap = 3;
-  const maxHour = 5;
-  const maxMinute = 60;
+  const daysStartGap = getRandomInteger(0, TRIP_DATE.MAX_START_DAYS_GAP);
+  const daysEndGap = getRandomInteger(0, TRIP_DATE.MAX_END_DAYS_GAP);
 
-  const daysStartGap = getRandomInteger(0, maxStartDaysGap);
-  const daysEndGap = getRandomInteger(0, maxEndDaysGap);
-
-  const startDate = dayjs().add(daysStartGap, `day`).add(getRandomInteger(0, maxHour), `hour`).add(getRandomInteger(0, maxMinute), `minute`).toDate();
-  const endDate = dayjs(startDate).add(daysEndGap, `day`).add(getRandomInteger(0, maxHour), `hour`).add(getRandomInteger(0, maxMinute), `minute`).toDate();
+  const startDate = dayjs()
+    .add(daysStartGap, `day`)
+    .add(getRandomInteger(0, TRIP_DATE.MAX_HOUR), `hour`)
+    .add(getRandomInteger(0, TRIP_DATE.MAX_MINUTE), `minute`)
+    .toDate();
+  const endDate = dayjs(startDate)
+    .add(daysEndGap, `day`)
+    .add(getRandomInteger(0, TRIP_DATE.MAX_HOUR), `hour`)
+    .add(getRandomInteger(0, TRIP_DATE.MAX_MINUTE), `minute`)
+    .toDate();
 
   return {
     startDate,

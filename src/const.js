@@ -39,3 +39,12 @@ export const DESCRIPTIONS = [
   `Sed sed nisi sed augue convallis suscipit in sed felis.`,
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`
 ];
+
+export const MAX_PHOTO = 6;
+
+export const TRIP_DATE = {
+  MAX_START_DAYS_GAP: 60,
+  MAX_END_DAYS_GAP: 3,
+  MAX_HOUR: 5,
+  MAX_MINUTE: 60,
+};
