@@ -10,10 +10,11 @@ import {
   TRIP_DATE,
 } from "../const";
 
-const getDescription = () => {
+const getDescription = (descriptions) => {
+  const randomElement = getRandomInteger(0, descriptions.length - 1);
 
-  return DESCRIPTIONS
-    .splice(getRandomInteger(0, DESCRIPTIONS.length - 1), getRandomInteger(0, DESCRIPTIONS.length - 1))
+  return descriptions
+    .slice(randomElement)
     .join(``);
 };
 
@@ -64,6 +65,6 @@ export const generateTripPoint = () => {
     isFavorite: Boolean(getRandomInteger(0, 1)),
     offerIds: getRandomOffersId(OFFERS),
     photos: getPhotos(),
-    description: getDescription(),
+    description: getDescription(DESCRIPTIONS),
   };
 };
