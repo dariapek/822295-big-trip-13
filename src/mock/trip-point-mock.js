@@ -46,11 +46,10 @@ const getTripDate = () => {
 };
 
 const getRandomOffersId = (offers) => {
-  const maxArrayLength = 3;
-  const minCount = getRandomInteger(0, 1);
-  const maxCount = getRandomInteger(minCount, offers.length - maxArrayLength + minCount);
+  const beginCount = getRandomInteger(0, offers.length - 3);
+  const endCount = getRandomInteger(beginCount, offers.length - 2);
 
-  return offers.map((offer) => offer.id).splice(minCount, maxCount);
+  return offers.map((offer) => offer.id).slice(beginCount, endCount);
 };
 
 export const generateTripPoint = () => {
