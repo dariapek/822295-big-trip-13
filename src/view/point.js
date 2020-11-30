@@ -3,19 +3,20 @@ import dayjs from "dayjs";
 import {formatDate} from "../utils";
 import {OFFERS} from "../const";
 
-const getDuration = (firstDate, secondDate) => {
-  const minute = 60000;
-  const hour = 3600000;
-  const day = 86400000;
+const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
 
+const getDuration = (firstDate, secondDate) => {
   const formattedFirstDate = dayjs(firstDate);
   const formattedSecondDate = dayjs(secondDate);
   const diff = formattedSecondDate.diff(formattedFirstDate, `millisecond`);
 
-  if ((hour - minute) >= diff) {
+  if (diff < HOUR) {
 
     return dayjs(diff).format(`mm[M]`);
-  } else if (diff >= hour && diff < day) {
+  } else if (diff < DAY) {
 
     return dayjs(diff).format(`hh[H] mm[M]`);
   } else {
