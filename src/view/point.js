@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import {formatDate} from "../utils";
+import {createElement, formatDate} from "../utils";
 import {OFFERS} from "../const";
 
 const SECOND = 1000;
@@ -35,9 +35,8 @@ const getOfferItem = (offers, offerId) => {
           </li>`;
 };
 
-export const getPointTemplate = (point) => {
+const getPointTemplate = (point) => {
   const {type, destination, startDate, endDate, price, isFavorite, offerIds} = point;
-
   const date = formatDate(startDate, `MMM DD`);
   const startTime = formatDate(startDate, `HH:mm`);
   const startTimeUTC = formatDate(startDate, ``);
@@ -83,3 +82,27 @@ export const getPointTemplate = (point) => {
               </div>
           </li>`;
 };
+
+export default class Point {
+  constructor(point) {
+    this._point = point;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return getPointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
