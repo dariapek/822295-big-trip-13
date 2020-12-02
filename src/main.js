@@ -11,7 +11,7 @@ import {generateTripPoint} from "./mock/trip-point-mock";
 import {getSortData} from "./mock/sort-mock";
 import {getFilterData} from "./mock/filters-mock";
 import {getNavigationData} from "./mock/navigation-mock";
-import {render, RenderPosition} from "./utils";
+import {render, replace, RenderPosition} from "./utils";
 
 const EVENT_COUNT = 15;
 
@@ -48,25 +48,17 @@ const renderPoint = (pointListElement, point) => {
   const pointComponent = new PointView(point);
   const pointEditComponent = new EditPointView(point);
 
-  const replaceEditFormToPoint = () => {
-    pointListElement.replaceChild(pointComponent.getElement(), pointEditComponent.getElement());
-  };
-
-  const replacePointToPointEditForm = () => {
-    pointListElement.replaceChild(pointEditComponent.getElement(), pointComponent.getElement());
-  };
-
   pointComponent.getElement()
     .querySelector(`.event__rollup-btn`)
     .addEventListener(`click`, () => {
-      replacePointToPointEditForm();
+      replace(pointListElement, pointEditComponent.getElement(), pointComponent.getElement());
     });
 
   pointEditComponent.getElement()
     .querySelector(`.event--edit`)
     .addEventListener(`submit`, (evt) => {
       evt.preventDefault();
-      replaceEditFormToPoint();
+      replace(pointListElement, pointComponent.getElement(), pointEditComponent.getElement());
     });
 
   render(pointListElement, pointComponent.getElement(), RenderPosition.BEFORE_END);

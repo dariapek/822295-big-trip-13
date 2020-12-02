@@ -53,3 +53,7 @@ export const createElement = (template) => {
 
   return newElement.firstChild;
 };
+
+export const replace = (parentNode, newChild, oldChild) => {
+  parentNode.replaceChild(newChild, oldChild);
+};
