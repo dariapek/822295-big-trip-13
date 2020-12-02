@@ -1,4 +1,4 @@
-import {formatDate, getRandomInteger} from "../utils";
+import {createElement, formatDate, getRandomInteger} from "../utils";
 import {TRIP_TYPES, TRIP_DESTINATIONS, OFFERS} from "../const";
 
 const getPhotosTemplate = (photos) => {
@@ -65,7 +65,7 @@ const getDestinationOptionsTemplate = (destinations) => {
   }).join(``);
 };
 
-export const getEditTemplate = (point = {}, defaultTripType = TRIP_TYPES[0]) => {
+const getEditTemplate = (point, defaultTripType = TRIP_TYPES[0]) => {
   const {
     type,
     destination,
@@ -149,3 +149,27 @@ export const getEditTemplate = (point = {}, defaultTripType = TRIP_TYPES[0]) => 
               </form>
             </li>`;
 };
+
+export default class EditPoint {
+  constructor(point = {}) {
+    this._point = point;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return getEditTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
