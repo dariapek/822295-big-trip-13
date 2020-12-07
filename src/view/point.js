@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 
-import {createElement, formatDate} from "../utils";
+import {formatDate} from "../utils/common";
 import {OFFERS} from "../const";
+import AbstractView from "./abstract";
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
@@ -83,26 +84,24 @@ const getPointTemplate = (point) => {
           </li>`;
 };
 
-export default class Point {
+export default class Point extends AbstractView {
   constructor(point) {
+    super();
     this._point = point;
 
-    this._element = null;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
     return getPointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _clickHandler(evt) {
+    this.collback.click(evt);
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(clickCallback) {
+    this.collback.click = clickCallback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._clickHandler);
   }
 }
