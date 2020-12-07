@@ -161,11 +161,11 @@ export default class EditPoint extends AbstractView {
   }
 
   _formSubmitHandler(evt) {
-    this.collback.submit(evt);
+    this.collbacks.submit(evt);
   }
 
   _clickHandler(evt) {
-    this.collback.click(evt);
+    this.collbacks.click(evt);
   }
 
   getTemplate() {
@@ -173,12 +173,12 @@ export default class EditPoint extends AbstractView {
   }
 
   setFormSubmitHandler(submitCallback) {
-    this.collback.submit = submitCallback;
+    this.collbacks.submit = submitCallback;
     this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
   setClickHandler(clickCallback) {
-    this.collback.click = clickCallback;
+    this.collbacks.click = clickCallback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._clickHandler);
   }
 }
