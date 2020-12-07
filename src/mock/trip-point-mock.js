@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import {getRandomInteger, getRandomItemFromArray, getRandomElements} from "../utils";
+import {getRandomInteger, getRandomItemFromArray, getRandomElements} from "../utils/common";
 import {
   OFFERS,
   TRIP_DESTINATIONS,
