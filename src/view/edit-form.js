@@ -1,5 +1,6 @@
-import {createElement, formatDate, getRandomInteger} from "../utils";
+import {formatDate, getRandomInteger} from "../utils/common";
 import {TRIP_TYPES, TRIP_DESTINATIONS, OFFERS} from "../const";
+import AbstractView from "./abstract";
 
 const getPhotosTemplate = (photos) => {
 
@@ -150,26 +151,34 @@ const getEditTemplate = (point, defaultTripType = TRIP_TYPES[0]) => {
             </li>`;
 };
 
-export default class EditPoint {
+export default class EditPoint extends AbstractView {
   constructor(point = {}) {
+    super();
     this._point = point;
 
-    this._element = null;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._clickHandler = this._clickHandler.bind(this);
+  }
+
+  _formSubmitHandler(evt) {
+    this.collback.submit(evt);
+  }
+
+  _clickHandler(evt) {
+    this.collback.click(evt);
   }
 
   getTemplate() {
     return getEditTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  setFormSubmitHandler(submitCallback) {
+    this.collback.submit = submitCallback;
+    this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
-  removeElement() {
-    this._element = null;
+  setClickHandler(clickCallback) {
+    this.collback.click = clickCallback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._clickHandler);
   }
 }
