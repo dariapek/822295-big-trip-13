@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractView from "./abstract";
 
 const getSortItemsTemplate = (sortList) => {
   return sortList.map(({title, isDisabled}, index) => {
@@ -21,26 +21,13 @@ const getSortListTemplate = (sortList) => {
 };
 
 
-export default class Sort {
+export default class Sort extends AbstractView {
   constructor(sortList) {
+    super();
     this._sortList = sortList;
-
-    this._element = null;
   }
 
   getTemplate() {
     return getSortListTemplate(this._sortList);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
