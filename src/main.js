@@ -11,7 +11,7 @@ import {generateTripPoint} from "./mock/trip-point-mock";
 import {getSortData} from "./mock/sort-mock";
 import {getFilterData} from "./mock/filters-mock";
 import {getNavigationData} from "./mock/navigation-mock";
-import {render, replace, RenderPosition} from "./utils";
+import {render, RenderPosition, replace} from "./utils/render";
 
 const EVENT_COUNT = 15;
 
@@ -22,17 +22,17 @@ const tripEvents = body.querySelector(`.trip-events`);
 
 const tripPoints = new Array(EVENT_COUNT).fill().map(generateTripPoint);
 
-render(main, new InformationView().getElement(), RenderPosition.AFTER_BEGIN);
+render(main, new InformationView(), RenderPosition.AFTER_BEGIN);
 
 const tripInfo = body.querySelector(`.trip-info`);
 const sortData = getSortData();
 const filtersData = getFilterData();
 const navigationsData = getNavigationData();
 
-render(tripInfo, new TotalPriceView().getElement(), RenderPosition.BEFORE_END);
-render(controls, new NavigationView(navigationsData).getElement(), RenderPosition.AFTER_BEGIN);
-render(controls, new FiltersView(filtersData).getElement(), RenderPosition.BEFORE_END);
-render(tripEvents, new SortView(sortData).getElement(), RenderPosition.BEFORE_END);
+render(tripInfo, new TotalPriceView(), RenderPosition.BEFORE_END);
+render(controls, new NavigationView(navigationsData), RenderPosition.AFTER_BEGIN);
+render(controls, new FiltersView(filtersData), RenderPosition.BEFORE_END);
+render(tripEvents, new SortView(sortData), RenderPosition.BEFORE_END);
 
 const renderPointsList = (container, points) => {
   const pointsList = new PointsListView().getElement();
@@ -48,20 +48,20 @@ const renderPoint = (pointListElement, point) => {
   const pointComponent = new PointView(point);
   const pointEditComponent = new EditPointView(point);
 
-  pointComponent.getElement()
-    .querySelector(`.event__rollup-btn`)
-    .addEventListener(`click`, () => {
-      replace(pointListElement, pointEditComponent.getElement(), pointComponent.getElement());
-    });
+  pointComponent.setClickHandler(() => {
+    replace(pointEditComponent, pointComponent);
+  });
 
-  pointEditComponent.getElement()
-    .querySelector(`.event--edit`)
-    .addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
-      replace(pointListElement, pointComponent.getElement(), pointEditComponent.getElement());
-    });
+  pointEditComponent.setFormSubmitHandler((evt) => {
+    evt.preventDefault();
+    replace(pointComponent, pointEditComponent);
+  });
 
-  render(pointListElement, pointComponent.getElement(), RenderPosition.BEFORE_END);
+  pointEditComponent.setClickHandler(() => {
+    replace(pointComponent, pointEditComponent);
+  });
+
+  render(pointListElement, pointComponent, RenderPosition.BEFORE_END);
 };
 
 renderPointsList(tripEvents, tripPoints);
