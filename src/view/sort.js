@@ -1,5 +1,28 @@
 import AbstractView from "./abstract";
 
+const sortData = [
+  {
+    title: `day`,
+    isDisabled: false,
+  },
+  {
+    title: `event`,
+    isDisabled: true,
+  },
+  {
+    title: `time`,
+    isDisabled: false,
+  },
+  {
+    title: `price`,
+    isDisabled: false,
+  },
+  {
+    title: `offer`,
+    isDisabled: true,
+  },
+];
+
 const getSortItemsTemplate = (sortList) => {
   return sortList.map(({title, isDisabled}, index) => {
     const disabled = isDisabled ? `disabled` : ``;
@@ -22,9 +45,9 @@ const getSortListTemplate = (sortList) => {
 
 
 export default class Sort extends AbstractView {
-  constructor(sortList) {
+  constructor() {
     super();
-    this._sortList = sortList;
+    this._sortList = sortData;
   }
 
   getTemplate() {
