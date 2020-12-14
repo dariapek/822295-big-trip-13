@@ -67,11 +67,11 @@ export default class Point {
   }
 
   _handleOpenClick() {
-    this._replaceFormToPoint();
+    this._replacePointToForm();
   }
 
   _handleCloseClick() {
-    this._replacePointToForm();
+    this._replaceFormToPoint();
   }
 
   _handleFormSubmit(evt) {
