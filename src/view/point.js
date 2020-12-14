@@ -90,6 +90,7 @@ export default class Point extends AbstractView {
     this._point = point;
 
     this._clickHandler = this._clickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -100,8 +101,17 @@ export default class Point extends AbstractView {
     this.collbacks.click(evt);
   }
 
+  _favoriteClickHandler() {
+    this.collbacks.favoriteClick();
+  }
+
   setClickHandler(clickCallback) {
     this.collbacks.click = clickCallback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._clickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this.collbacks.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 }
