@@ -10,6 +10,8 @@ import {
   TRIP_DATE,
 } from "../const";
 
+const getId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const getPhotos = () => {
   const randomInteger = getRandomInteger(1, MAX_PHOTO);
 
@@ -42,6 +44,7 @@ export const generateTripPoint = () => {
   const {startDate, endDate} = getTripDate();
 
   return {
+    id: getId(),
     type: getRandomItemFromArray(TRIP_TYPES),
     destination: getRandomItemFromArray(TRIP_DESTINATIONS),
     startDate,
