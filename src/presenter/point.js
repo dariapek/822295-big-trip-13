@@ -81,7 +81,7 @@ export default class Point {
 
   _replacePointToForm() {
     replace(this._pointEditComponent, this._pointComponent);
-    this._changeMode();
+    this._changeMode(this);
     this._mode = Mode.EDITING;
   }
 

@@ -60,9 +60,13 @@ export default class Trip {
     this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
 
-  _handleModeChange() {
+  _handleModeChange(currentPrinter) {
     Object
       .values(this._pointPresenter)
-      .forEach((presenter) => presenter.resetView());
+      .forEach((presenter) => {
+        if (presenter !== currentPrinter) {
+          presenter.resetView();
+        }
+      });
   }
 }
