@@ -3,13 +3,14 @@ import PointsListView from "../view/points-list";
 import PointPresenter from "../presenter/point";
 import {render, RenderPosition} from "../utils/render";
 import {updateItem} from "../utils/common";
+import {sortData} from "../utils/sort";
 
 export default class Trip {
   constructor(tripEventsContainer) {
     this._tripEventsContainer = tripEventsContainer;
     this._pointPresenter = {};
 
-    this._sortComponent = new SortView();
+    this._sortComponent = new SortView(sortData);
     this._pointsListComponent = new PointsListView();
 
     this._handleTaskChanged = this._handleTaskChanged.bind(this);
