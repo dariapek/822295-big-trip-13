@@ -22,9 +22,9 @@ const getSortListTemplate = (sortList) => {
 
 
 export default class Sort extends AbstractView {
-  constructor(sortList) {
+  constructor(sortData) {
     super();
-    this._sortList = sortList;
+    this._sortList = sortData;
   }
 
   getTemplate() {
