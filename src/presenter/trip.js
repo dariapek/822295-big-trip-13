@@ -18,7 +18,7 @@ export default class Trip {
   }
 
   init(points) {
-    this._points = points.slice();
+    this._points = points;
 
     this._renderSort();
     this._renderPointsList();
