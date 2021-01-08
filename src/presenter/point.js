@@ -74,8 +74,7 @@ export default class Point {
     this._replaceFormToPoint();
   }
 
-  _handleFormSubmit(evt) {
-    evt.preventDefault();
+  _handleFormSubmit() {
     this._replaceFormToPoint();
   }
 
