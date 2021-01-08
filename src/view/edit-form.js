@@ -1,5 +1,5 @@
 import {formatDate, getRandomInteger} from "../utils/common";
-import {TRIP_TYPES, TRIP_DESTINATIONS, OFFERS} from "../const";
+import {TRIP_TYPES, TRIP_DESTINATIONS, OFFERS, FIRST} from "../const";
 import AbstractView from "./abstract";
 
 const getPhotosTemplate = (photos) => {
@@ -66,27 +66,25 @@ const getDestinationOptionsTemplate = (destinations) => {
   }).join(``);
 };
 
-const getEditTemplate = (point, defaultTripType = TRIP_TYPES[0]) => {
+const getEditTemplate = (pointData) => {
   const {
-    type,
     destination,
-    startDate,
-    endDate,
     price,
+    idPrefix,
+    tripType,
+    formattedStartDate,
+    formattedEndDate,
+    resetButtonText,
+    isCreateForm,
     offerIds,
-    photos,
     description,
-  } = point;
-  const isCreateForm = !Object.keys(point).length;
-  const tripType = isCreateForm ? defaultTripType : type;
+    photos,
+  } = pointData;
+
   const eventTypeItemsTemplate = getEventTypeListItemTemplate(TRIP_TYPES);
   const destinationItemsTemplate = getDestinationOptionsTemplate(TRIP_DESTINATIONS);
-  const formattedStartDate = isCreateForm ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
-  const formattedEndDate = isCreateForm ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
-  const resetButtonText = isCreateForm ? `Cancel` : `Delete`;
   const offersTemplate = getOffersTemplate(OFFERS, isCreateForm ? [] : offerIds);
   const destinationSectionTemplate = getDestinationSectionTemplate(description, photos);
-  const idPrefix = isCreateForm ? `1` : `2`;
 
   return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -154,7 +152,7 @@ const getEditTemplate = (point, defaultTripType = TRIP_TYPES[0]) => {
 export default class EditPoint extends AbstractView {
   constructor(point = {}) {
     super();
-    this._point = point;
+    this._data = EditPoint.parsePointToData(point);
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._clickHandler = this._clickHandler.bind(this);
@@ -162,7 +160,7 @@ export default class EditPoint extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this.callbacks.submit(this._point);
+    this.callbacks.submit(EditPoint.parseDataToPoint(this._data));
   }
 
   _clickHandler(evt) {
@@ -170,7 +168,7 @@ export default class EditPoint extends AbstractView {
   }
 
   getTemplate() {
-    return getEditTemplate(this._point);
+    return getEditTemplate(this._data);
   }
 
   setFormSubmitHandler(submitCallback) {
@@ -181,5 +179,46 @@ export default class EditPoint extends AbstractView {
   setClickHandler(clickCallback) {
     this.callbacks.click = clickCallback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._clickHandler);
+  }
+
+  static parsePointToData(point) {
+    const {
+      type,
+      startDate,
+      endDate,
+    } = point;
+    const defaultTripType = TRIP_TYPES[FIRST];
+    const isCreateForm = !Object.keys(point).length;
+    const tripType = isCreateForm ? defaultTripType : type;
+    const formattedStartDate = isCreateForm ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
+    const formattedEndDate = isCreateForm ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
+    const resetButtonText = isCreateForm ? `Cancel` : `Delete`;
+    const idPrefix = isCreateForm ? `1` : `2`;
+
+    return Object.assign(
+        {},
+        point,
+        {
+          isCreateForm,
+          tripType,
+          formattedStartDate,
+          formattedEndDate,
+          resetButtonText,
+          idPrefix,
+        }
+    );
+  }
+
+  static parseDataToPoint(data) {
+    data = Object.assign({}, data);
+
+    delete data.isCreateForm;
+    delete data.tripType;
+    delete data.formattedStartDate;
+    delete data.formattedEndDate;
+    delete data.resetButtonText;
+    delete data.idPrefix;
+
+    return data;
   }
 }
