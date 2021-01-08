@@ -40,6 +40,7 @@ export const DESCRIPTIONS = [
 ];
 
 export const MAX_PHOTO = 6;
+export const FIRST = 0;
 
 export const TRIP_DATE = {
   MAX_START_DAYS_GAP: 60,
