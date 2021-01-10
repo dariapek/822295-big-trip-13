@@ -1,4 +1,6 @@
-import {formatDate, getRandomInteger} from "../utils/common";
+import dayjs from "dayjs";
+
+import {formatDate} from "../utils/common";
 import {TRIP_TYPES, TRIP_DESTINATIONS, OFFERS, FIRST} from "../const";
 import Smart from "./smart";
 
