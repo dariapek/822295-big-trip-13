@@ -53,7 +53,7 @@ const getEventTypeListItemTemplate = (tripTypes) => {
     const lowerCaseType = type.toLowerCase();
 
     return `<div class="event__type-item">
-              <input id="event-type-${lowerCaseType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCaseType}">
+              <input id="event-type-${lowerCaseType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
               <label class="event__type-label  event__type-label--${lowerCaseType}" for="event-type-${lowerCaseType}-1">${type}</label>
             </div>`;
   }).join(``);
@@ -71,9 +71,9 @@ const getEditTemplate = (pointData) => {
     destination,
     price,
     idPrefix,
-    tripType,
-    formattedStartDate,
-    formattedEndDate,
+    type,
+    startDate,
+    endDate,
     resetButtonText,
     isCreateForm,
     offerIds,
@@ -85,6 +85,9 @@ const getEditTemplate = (pointData) => {
   const destinationItemsTemplate = getDestinationOptionsTemplate(TRIP_DESTINATIONS);
   const offersTemplate = getOffersTemplate(OFFERS, isCreateForm ? [] : offerIds);
   const destinationSectionTemplate = getDestinationSectionTemplate(description, photos);
+
+  const formattedStartDate = isCreateForm ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
+  const formattedEndDate = isCreateForm ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
 
   return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -106,7 +109,7 @@ const getEditTemplate = (pointData) => {
 
                   <div class="event__field-group  event__field-group--destination">
                     <label class="event__label  event__type-output" for="event-destination-1">
-                      ${tripType}
+                      ${type}
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination || ``}" list="destination-list-1">
                     <datalist id="destination-list-1">
@@ -184,14 +187,9 @@ export default class EditPoint extends AbstractView {
   static parsePointToData(point) {
     const {
       type,
-      startDate,
-      endDate,
     } = point;
     const defaultTripType = TRIP_TYPES[FIRST];
     const isCreateForm = !Object.keys(point).length;
-    const tripType = isCreateForm ? defaultTripType : type;
-    const formattedStartDate = isCreateForm ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
-    const formattedEndDate = isCreateForm ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
     const resetButtonText = isCreateForm ? `Cancel` : `Delete`;
     const idPrefix = isCreateForm ? `1` : `2`;
 
@@ -199,10 +197,8 @@ export default class EditPoint extends AbstractView {
         {},
         point,
         {
+          type: isCreateForm ? defaultTripType : type,
           isCreateForm,
-          tripType,
-          formattedStartDate,
-          formattedEndDate,
           resetButtonText,
           idPrefix,
         }
@@ -210,15 +206,12 @@ export default class EditPoint extends AbstractView {
   }
 
   static parseDataToPoint(data) {
-    data = Object.assign({}, data);
+    let point = Object.assign({}, data);
 
-    delete data.isCreateForm;
-    delete data.tripType;
-    delete data.formattedStartDate;
-    delete data.formattedEndDate;
-    delete data.resetButtonText;
-    delete data.idPrefix;
+    delete point.isCreateForm;
+    delete point.resetButtonText;
+    delete point.idPrefix;
 
-    return data;
+    return point;
   }
 }
