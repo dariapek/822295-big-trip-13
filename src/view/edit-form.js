@@ -1,6 +1,6 @@
 import {formatDate, getRandomInteger} from "../utils/common";
 import {TRIP_TYPES, TRIP_DESTINATIONS, OFFERS, FIRST} from "../const";
-import AbstractView from "./abstract";
+import Smart from "./smart";
 
 const getPhotosTemplate = (photos) => {
 
@@ -152,13 +152,20 @@ const getEditTemplate = (pointData) => {
             </li>`;
 };
 
-export default class EditPoint extends AbstractView {
+export default class EditPoint extends Smart {
   constructor(point = {}) {
     super();
     this._data = EditPoint.parsePointToData(point);
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._clickHandler = this._clickHandler.bind(this);
+    this._offerToggleHandler = this._offerToggleHandler.bind(this);
+    this._pointTypeChangeHandler = this._pointTypeChangeHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
+    this._timeInputHandler = this._timeInputHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   _formSubmitHandler(evt) {
@@ -168,6 +175,80 @@ export default class EditPoint extends AbstractView {
 
   _clickHandler(evt) {
     this.callbacks.click(evt);
+  }
+
+  _offerToggleHandler(evt) {
+    evt.preventDefault();
+    const targetId = evt.target.id;
+    let offerIdsCopy = this._data.offerIds.slice();
+
+    if (offerIdsCopy.includes(targetId)) {
+      offerIdsCopy = offerIdsCopy.filter((offer) => offer !== targetId);
+    } else {
+      offerIdsCopy.push(targetId);
+    }
+
+    this.updateData({
+      offerIds: offerIdsCopy,
+    });
+  }
+
+  _pointTypeChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value
+    });
+  }
+
+  _destinationInputHandler(evt) {
+    this.updateData({
+      destination: evt.target.value
+    }, true);
+  }
+
+  _timeInputHandler(evt) {
+    const formattedDate = dayjs(evt.target.value).toDate();
+
+    if (evt.target.name === `event-start-time`) {
+      this.updateData({
+        startDate: formattedDate
+      }, true);
+    } else {
+      this.updateData({
+        endDate: formattedDate
+      }, true);
+    }
+  }
+
+  _priceInputHandler(evt) {
+    this.updateData({
+      price: evt.target.value
+    }, true);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.event__type-group`)
+      .addEventListener(`change`, this._pointTypeChangeHandler);
+
+    this.getElement()
+      .querySelector(`.event__available-offers`)
+      .addEventListener(`change`, this._offerToggleHandler);
+
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._destinationInputHandler);
+
+    this.getElement()
+      .querySelectorAll(`.event__input--time`)
+      .forEach((timeInput) => {
+        timeInput.addEventListener(`input`, this._timeInputHandler);
+      });
+
+    this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`input`, this._priceInputHandler);
+
   }
 
   getTemplate() {
@@ -182,6 +263,12 @@ export default class EditPoint extends AbstractView {
   setClickHandler(clickCallback) {
     this.callbacks.click = clickCallback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._clickHandler);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this.callbacks.submit);
+    this.setClickHandler(this.callbacks.click);
   }
 
   static parsePointToData(point) {
