@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import {dayjs} from "../utils/dayjs";
 
 import {formatDate} from "../utils/common";
 import {OFFERS} from "../const";

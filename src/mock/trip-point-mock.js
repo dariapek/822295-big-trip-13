@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import {dayjs} from "../utils/dayjs";
 
 import {getRandomInteger, getRandomItemFromArray, getRandomElements} from "../utils/common";
 import {
