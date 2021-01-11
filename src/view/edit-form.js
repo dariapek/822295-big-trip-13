@@ -205,7 +205,7 @@ export default class EditPoint extends Smart {
   }
 
   _timeInputHandler(evt) {
-    const formattedDate = dayjs(evt.target.value).toDate();
+    const formattedDate = dayjs(evt.target.value, `DD/MM/YY HH:mm`).toDate();
 
     if (evt.target.name === `event-start-time`) {
       this.updateData({
