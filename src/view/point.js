@@ -1,7 +1,5 @@
 import {dayjs} from "../utils/dayjs";
-
 import {formatDate} from "../utils/common";
-import {OFFERS} from "../const";
 import AbstractView from "./abstract";
 
 const SECOND = 1000;
