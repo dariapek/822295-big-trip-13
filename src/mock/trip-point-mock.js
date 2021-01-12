@@ -1,8 +1,8 @@
 import {dayjs} from "../utils/dayjs";
+import {getOfferMockData} from "./offers-mock";
 
 import {getRandomInteger, getRandomItemFromArray, getRandomElements} from "../utils/common";
 import {
-  OFFERS,
   TRIP_DESTINATIONS,
   TRIP_TYPES,
   DESCRIPTIONS,
@@ -42,16 +42,19 @@ const getTripDate = () => {
 
 export const generateTripPoint = () => {
   const {startDate, endDate} = getTripDate();
+  const type = getRandomItemFromArray(TRIP_TYPES);
+  const pointOffer = getOfferMockData().find(({type: offerType}) => offerType === type);
+  const offerTitles = pointOffer.offers.length ? getRandomElements(pointOffer.offers, getRandomInteger(0, pointOffer.offers.length)).map((offer) => offer.title) : ``;
 
   return {
     id: getId(),
-    type: getRandomItemFromArray(TRIP_TYPES),
+    type,
     destination: getRandomItemFromArray(TRIP_DESTINATIONS),
     startDate,
     endDate,
     price: getRandomInteger(1, 2000),
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    offerIds: getRandomElements(OFFERS, getRandomInteger(0, 2)).map((offer) => offer.id),
+    offerTitles,
     photos: getPhotos(),
     description: getRandomElements(DESCRIPTIONS, getRandomInteger(0, 5)).join(``),
   };
