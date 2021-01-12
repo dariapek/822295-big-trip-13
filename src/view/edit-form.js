@@ -29,10 +29,10 @@ const getDestinationSectionTemplate = (description, photos) => {
            </section>` : ``;
 };
 
-const getOffersTemplate = (offers, checkedOffers = []) => {
-
-  return offers.map(({id, title, price}) => {
-    const isChecked = checkedOffers.includes(id) ? `checked` : ``;
+const getOffersTemplate = (offers, isCreateMode, checkedOffers) => {
+  if (offers.length) {
+    const offerTemplate = offers.map(({title, price}) => {
+      const isChecked = checkedOffers.includes(title) ? `checked` : ``;
 
     return `<div class="event__offer-selector">
               <input class="event__offer-checkbox  visually-hidden" id="${id}" type="checkbox" name="${id}" ${isChecked || ``}>
@@ -73,19 +73,19 @@ const getEditTemplate = (pointData) => {
     startDate,
     endDate,
     resetButtonText,
-    isCreateForm,
-    offerIds,
+    isCreateMode,
+    offerTitles,
     description,
     photos,
   } = pointData;
 
   const eventTypeItemsTemplate = getEventTypeListItemTemplate(TRIP_TYPES);
   const destinationItemsTemplate = getDestinationOptionsTemplate(TRIP_DESTINATIONS);
-  const offersTemplate = getOffersTemplate(OFFERS, isCreateForm ? [] : offerIds);
+  const offersTemplate = getOffersTemplate(offers, isCreateMode, offerTitles);
   const destinationSectionTemplate = getDestinationSectionTemplate(description, photos);
 
-  const formattedStartDate = isCreateForm ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
-  const formattedEndDate = isCreateForm ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
+  const formattedStartDate = isCreateMode ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
+  const formattedEndDate = isCreateMode ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
 
   return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -274,16 +274,16 @@ export default class EditPoint extends Smart {
       type,
     } = point;
     const defaultTripType = TRIP_TYPES[FIRST];
-    const isCreateForm = !Object.keys(point).length;
-    const resetButtonText = isCreateForm ? `Cancel` : `Delete`;
-    const idPrefix = isCreateForm ? `1` : `2`;
+    const isCreateMode = !Object.keys(point).length;
+    const resetButtonText = isCreateMode ? `Cancel` : `Delete`;
+    const idPrefix = isCreateMode ? `1` : `2`;
 
     return Object.assign(
         {},
         point,
         {
-          type: isCreateForm ? defaultTripType : type,
-          isCreateForm,
+          type: isCreateMode ? defaultTripType : type,
+          isCreateMode,
           resetButtonText,
           idPrefix,
         }
@@ -293,7 +293,7 @@ export default class EditPoint extends Smart {
   static parseDataToPoint(data) {
     let point = Object.assign({}, data);
 
-    delete point.isCreateForm;
+    delete point.isCreateMode;
     delete point.resetButtonText;
     delete point.idPrefix;
 
