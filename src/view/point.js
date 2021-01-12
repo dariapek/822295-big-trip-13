@@ -26,8 +26,8 @@ const getDuration = (firstDate, secondDate) => {
   }
 };
 
-const getOfferItem = (offers, offerId) => {
-  const offer = offers.find((offerItem) => offerItem.id === offerId);
+const getOfferItem = (offers, title) => {
+  const offer = offers.find((offerItem) => offerItem.title === title);
 
   return `<li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>
@@ -46,8 +46,10 @@ const getPointTemplate = (point) => {
   const duration = getDuration(startDate, endDate);
   const favoriteClassName = isFavorite ? `event__favorite-btn--active` : ``;
 
+  const pointOffer = offersList.find(({type: pointType}) => pointType === type);
+  const {offers} = pointOffer;
 
-  const offerTemplates = offerIds.map((id) => getOfferItem(OFFERS, id)).join(``);
+  const offerTemplates = offerTitles.length ? offerTitles.map((title) => getOfferItem(offers, title)).join(``) : ``;
 
   return `<li class="trip-events__item">
               <div class="event">
