@@ -1,4 +1,4 @@
-export const TRIP_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+export const TRIP_TYPES = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`];
 
 export const TRIP_DESTINATIONS = [`Geneva`, `London`, `St Petersburg`, `Berlin`, `Roma`, `Kiev`, `Paris`, `Budapest`, `Vienna`, `Milan`, `Chamonix`];
 
