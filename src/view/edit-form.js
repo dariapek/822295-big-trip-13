@@ -1,7 +1,7 @@
 import {dayjs} from "../utils/dayjs";
 
 import {formatDate} from "../utils/common";
-import {TRIP_TYPES, TRIP_DESTINATIONS, OFFERS, FIRST} from "../const";
+import {TRIP_TYPES, TRIP_DESTINATIONS, FIRST} from "../const";
 import Smart from "./smart";
 
 const getPhotosTemplate = (photos) => {
