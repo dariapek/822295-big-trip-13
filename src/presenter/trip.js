@@ -6,9 +6,11 @@ import {updateItem} from "../utils/common";
 import {sortData} from "../utils/sort";
 
 export default class Trip {
-  constructor(tripEventsContainer) {
+  constructor(tripEventsContainer, offersList) {
     this._tripEventsContainer = tripEventsContainer;
     this._pointPresenter = {};
+
+    this._offersList = offersList;
 
     this._sortComponent = new SortView(sortData);
     this._pointsListComponent = new PointsListView();
@@ -30,7 +32,7 @@ export default class Trip {
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._pointsListComponent, this._handleTaskChanged, this._handleModeChange);
+    const pointPresenter = new PointPresenter(this._pointsListComponent, this._handleTaskChanged, this._handleModeChange, this._offersList);
     pointPresenter.init(point);
     this._pointPresenter[point.id] = pointPresenter;
   }
