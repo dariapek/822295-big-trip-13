@@ -229,6 +229,13 @@ export default class EditPoint extends Smart {
   }
 
   _setInnerHandlers() {
+    const offersContainer = this.getElement()
+      .querySelector(`.event__available-offers`);
+
+    if (offersContainer) {
+      offersContainer.addEventListener(`change`, this._offerToggleHandler);
+    }
+
     this.getElement()
       .querySelector(`.event__type-group`)
       .addEventListener(`change`, this._pointTypeChangeHandler);
