@@ -36,8 +36,8 @@ const getOfferItem = (offers, title) => {
           </li>`;
 };
 
-const getPointTemplate = (point) => {
-  const {type, destination, startDate, endDate, price, isFavorite, offerIds} = point;
+const getPointTemplate = (point, offersList) => {
+  const {type, destination, startDate, endDate, price, isFavorite, offerTitles} = point;
   const date = formatDate(startDate, `MMM DD`);
   const startTime = formatDate(startDate, `HH:mm`);
   const startTimeUTC = formatDate(startDate, ``);
@@ -87,16 +87,17 @@ const getPointTemplate = (point) => {
 };
 
 export default class Point extends AbstractView {
-  constructor(point) {
+  constructor(point, offersList) {
     super();
     this._point = point;
+    this._offersList = offersList;
 
     this._clickHandler = this._clickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
-    return getPointTemplate(this._point);
+    return getPointTemplate(this._point, this._offersList);
   }
 
   _clickHandler(evt) {
