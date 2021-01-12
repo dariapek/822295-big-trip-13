@@ -74,7 +74,7 @@ const getDestinationOptionsTemplate = (destinations) => {
   }).join(``);
 };
 
-const getEditTemplate = (pointData) => {
+const getEditTemplate = (pointData, offersList) => {
   const {
     destination,
     price,
@@ -88,6 +88,8 @@ const getEditTemplate = (pointData) => {
     description,
     photos,
   } = pointData;
+
+  const {offers} = offersList;
 
   const eventTypeItemsTemplate = getEventTypeListItemTemplate(TRIP_TYPES);
   const destinationItemsTemplate = getDestinationOptionsTemplate(TRIP_DESTINATIONS);
@@ -155,9 +157,10 @@ const getEditTemplate = (pointData) => {
 };
 
 export default class EditPoint extends Smart {
-  constructor(point = {}) {
+  constructor(point = {}, offersList) {
     super();
     this._data = EditPoint.parsePointToData(point);
+    this._offersList = offersList;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._clickHandler = this._clickHandler.bind(this);
@@ -182,16 +185,16 @@ export default class EditPoint extends Smart {
   _offerToggleHandler(evt) {
     evt.preventDefault();
     const targetId = evt.target.id;
-    let offerIdsCopy = this._data.offerIds.slice();
+    let offerTitlesCopy = this._data.offerTitles.slice();
 
-    if (offerIdsCopy.includes(targetId)) {
-      offerIdsCopy = offerIdsCopy.filter((offer) => offer !== targetId);
+    if (offerTitlesCopy.includes(targetId)) {
+      offerTitlesCopy = offerTitlesCopy.filter((offer) => offer !== targetId);
     } else {
-      offerIdsCopy.push(targetId);
+      offerTitlesCopy.push(targetId);
     }
 
     this.updateData({
-      offerIds: offerIdsCopy,
+      offerTitles: offerTitlesCopy,
     });
   }
 
@@ -241,10 +244,6 @@ export default class EditPoint extends Smart {
       .addEventListener(`change`, this._pointTypeChangeHandler);
 
     this.getElement()
-      .querySelector(`.event__available-offers`)
-      .addEventListener(`change`, this._offerToggleHandler);
-
-    this.getElement()
       .querySelector(`.event__input--destination`)
       .addEventListener(`input`, this._destinationInputHandler);
 
@@ -260,8 +259,14 @@ export default class EditPoint extends Smart {
 
   }
 
+  _getPointOffers(offers) {
+    return offers.find(({type}) => type === this._data.type);
+  }
+
   getTemplate() {
-    return getEditTemplate(this._data);
+    const offers = this._getPointOffers(this._offersList);
+
+    return getEditTemplate(this._data, offers);
   }
 
   setFormSubmitHandler(submitCallback) {
