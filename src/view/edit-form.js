@@ -154,10 +154,11 @@ const getEditTemplate = (pointData, offersList) => {
 };
 
 export default class EditPoint extends Smart {
-  constructor(point = {}, offersList) {
+  constructor(point = {}, offersList, destinationsList) {
     super();
     this._data = EditPoint.parsePointToData(point);
     this._offersList = offersList;
+    this._destinationsList = destinationsList;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._clickHandler = this._clickHandler.bind(this);
