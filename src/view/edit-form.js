@@ -4,26 +4,32 @@ import {formatDate} from "../utils/common";
 import {TRIP_TYPES, TRIP_DESTINATIONS, FIRST} from "../const";
 import Smart from "./smart";
 
-const getPhotosTemplate = (photos) => {
+const getPhoto = (photo, alt) => {
 
-  return photos.map((photo) => {
-    return `<img class="event__photo" src="${photo}" alt="Event photo">`;
-  }).join(``);
+  return `<img class="event__photo" src="${photo}" alt="${alt}">`;
 };
 
-const getDestinationSectionTemplate = (description, photos) => {
+const getPhotosTemplate = (destinationInfo) => {
+  const photos = destinationInfo.pictures.map(({src, description: alt}) => {
+    return getPhoto(src, alt);
+  }).join(``);
+
+  return `<div class="event__photos-container">
+              <div class="event__photos-tape">
+                ${photos}
+              </div>
+          </div>`;
+};
+
+const getDestinationSectionTemplate = (destinationInfo) => {
+  const description = destinationInfo.description;
   const descriptionTemplate = description ?
     `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-     <p class="event__destination-description">${description}</p>` : ``;
+     <p class="event__destination-description">${destinationInfo.description}</p>` : ``;
 
-  const photosTemplate = photos ?
-    `<div class="event__photos-container">
-        <div class="event__photos-tape">
-          ${getPhotosTemplate(photos)}
-        </div>
-    </div>` : ``;
+  const photosTemplate = destinationInfo.pictures.length ? getPhotosTemplate(destinationInfo) : ``;
 
-  return description || photos ? `<section class="event__section  event__section--destination">
+  return description || destinationInfo.pictures ? `<section class="event__section  event__section--destination">
               ${descriptionTemplate}
               ${photosTemplate}
            </section>` : ``;
@@ -74,9 +80,8 @@ const getDestinationOptionsTemplate = (destinations) => {
   }).join(``);
 };
 
-const getEditTemplate = (pointData, offersList) => {
+const getEditTemplate = (pointData, offersList, destinationInfo) => {
   const {
-    destination,
     price,
     idPrefix,
     type,
@@ -92,7 +97,7 @@ const getEditTemplate = (pointData, offersList) => {
   const eventTypeItemsTemplate = getEventTypeListItemTemplate(TRIP_TYPES);
   const destinationItemsTemplate = getDestinationOptionsTemplate(TRIP_DESTINATIONS);
   const offersTemplate = getOffersTemplate(offers, isCreateMode, offerTitles);
-  // const destinationSectionTemplate = getDestinationSectionTemplate(description, photos);
+  const destinationSectionTemplate = getDestinationSectionTemplate(destinationInfo);
 
   const formattedStartDate = isCreateMode ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
   const formattedEndDate = isCreateMode ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
@@ -119,7 +124,7 @@ const getEditTemplate = (pointData, offersList) => {
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination || ``}" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationInfo.name || ``}" list="destination-list-1">
                     <datalist id="destination-list-1">
                       ${destinationItemsTemplate}
                     </datalist>
@@ -149,6 +154,7 @@ const getEditTemplate = (pointData, offersList) => {
                 </header>
                 <section class="event__details">
                   ${offersTemplate}
+                  ${destinationSectionTemplate}
               </form>
             </li>`;
 };
@@ -204,9 +210,12 @@ export default class EditPoint extends Smart {
   }
 
   _destinationInputHandler(evt) {
+    const targetDestination = evt.target.value;
+    const isDestination = this._getPointDestination(this._destinationsList, evt.target.value);
+
     this.updateData({
-      destination: evt.target.value
-    }, true);
+      destination: targetDestination,
+    }, !isDestination);
   }
 
   _timeInputHandler(evt) {
@@ -257,14 +266,19 @@ export default class EditPoint extends Smart {
 
   }
 
-  _getPointOffers(offers) {
+  _getPointOffer(offers) {
     return offers.find(({type}) => type === this._data.type);
   }
 
-  getTemplate() {
-    const offers = this._getPointOffers(this._offersList);
+  _getPointDestination(destinationsList, destination) {
+    return destinationsList.find(({name}) => name === destination);
+  }
 
-    return getEditTemplate(this._data, offers);
+  getTemplate() {
+    const offers = this._getPointOffer(this._offersList);
+    const destination = this._getPointDestination(this._destinationsList, this._data.destination);
+
+    return getEditTemplate(this._data, offers, destination);
   }
 
   setFormSubmitHandler(submitCallback) {
