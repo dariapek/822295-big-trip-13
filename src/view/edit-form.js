@@ -85,8 +85,6 @@ const getEditTemplate = (pointData, offersList) => {
     resetButtonText,
     isCreateMode,
     offerTitles,
-    description,
-    photos,
   } = pointData;
 
   const {offers} = offersList;
@@ -94,7 +92,7 @@ const getEditTemplate = (pointData, offersList) => {
   const eventTypeItemsTemplate = getEventTypeListItemTemplate(TRIP_TYPES);
   const destinationItemsTemplate = getDestinationOptionsTemplate(TRIP_DESTINATIONS);
   const offersTemplate = getOffersTemplate(offers, isCreateMode, offerTitles);
-  const destinationSectionTemplate = getDestinationSectionTemplate(description, photos);
+  // const destinationSectionTemplate = getDestinationSectionTemplate(description, photos);
 
   const formattedStartDate = isCreateMode ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
   const formattedEndDate = isCreateMode ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
@@ -151,7 +149,6 @@ const getEditTemplate = (pointData, offersList) => {
                 </header>
                 <section class="event__details">
                   ${offersTemplate}
-                  ${destinationSectionTemplate}
               </form>
             </li>`;
 };
