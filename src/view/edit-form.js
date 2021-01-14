@@ -1,50 +1,64 @@
-import {formatDate, getRandomInteger} from "../utils/common";
-import {TRIP_TYPES, TRIP_DESTINATIONS, OFFERS} from "../const";
-import AbstractView from "./abstract";
+import {dayjs} from "../utils/dayjs";
 
-const getPhotosTemplate = (photos) => {
+import {formatDate} from "../utils/common";
+import {TRIP_TYPES, TRIP_DESTINATIONS, FIRST} from "../const";
+import Smart from "./smart";
 
-  return photos.map((photo) => {
-    return `<img class="event__photo" src="${photo}" alt="Event photo">`;
-  }).join(``);
+const getPhoto = (photo, alt) => {
+
+  return `<img class="event__photo" src="${photo}" alt="${alt}">`;
 };
 
-const getDestinationSectionTemplate = (description, photos) => {
+const getPhotosTemplate = (destinationInfo) => {
+  const photos = destinationInfo.pictures.map(({src, description: alt}) => {
+    return getPhoto(src, alt);
+  }).join(``);
+
+  return `<div class="event__photos-container">
+              <div class="event__photos-tape">
+                ${photos}
+              </div>
+          </div>`;
+};
+
+const getDestinationSectionTemplate = (destinationInfo) => {
+  const description = destinationInfo.description;
   const descriptionTemplate = description ?
     `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-     <p class="event__destination-description">${description}</p>` : ``;
+     <p class="event__destination-description">${destinationInfo.description}</p>` : ``;
 
-  const photosTemplate = photos ?
-    `<div class="event__photos-container">
-        <div class="event__photos-tape">
-          ${getPhotosTemplate(photos)}
-        </div>
-    </div>` : ``;
+  const photosTemplate = destinationInfo.pictures.length ? getPhotosTemplate(destinationInfo) : ``;
 
-  return description || photos ? `<section class="event__section  event__section--destination">
+  return description || destinationInfo.pictures ? `<section class="event__section  event__section--destination">
               ${descriptionTemplate}
               ${photosTemplate}
            </section>` : ``;
 };
 
-const getOffersTemplate = (offers, checkedOffers = []) => {
+const getOffersTemplate = (offers, isCreateMode, checkedOffers) => {
+  if (offers.length) {
+    const offerTemplate = offers.map(({title, price}) => {
+      const isChecked = checkedOffers.includes(title) ? `checked` : ``;
 
-  return offers.map(({id, title, price}) => {
-    const isEditForm = Boolean(checkedOffers.length);
-    const randomChecked = getRandomInteger(0, 1) ? `checked` : ``;
-    const checkedOffer = checkedOffers.includes(id) ? `checked` : ``;
-    const isChecked = isEditForm ? checkedOffer : randomChecked;
-    const idPrefix = isEditForm ? `edit` : `create`;
-
-    return `<div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="${id}${idPrefix}" type="checkbox" name="event-offer-comfort" ${isChecked}>
-              <label class="event__offer-label" for="${id}${idPrefix}">
+      return `<div class="event__offer-selector">
+              <input class="event__offer-checkbox  visually-hidden" id="${title}" type="checkbox" name="${title}" ${isChecked}>
+              <label class="event__offer-label" for="${title}">
                 <span class="event__offer-title">${title}</span>
-                &plus;&euro;&nbsp;
+                 &plus;&euro;&nbsp;
                 <span class="event__offer-price">${price}</span>
               </label>
             </div>`;
-  }).join(``);
+    });
+
+    return `<section class="event__section  event__section--offers">
+              <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+              <div class="event__available-offers">
+                ${offerTemplate.join(``)}
+              </div>
+            </section>`;
+  } else {
+    return ``;
+  }
 };
 
 const getEventTypeListItemTemplate = (tripTypes) => {
@@ -53,7 +67,7 @@ const getEventTypeListItemTemplate = (tripTypes) => {
     const lowerCaseType = type.toLowerCase();
 
     return `<div class="event__type-item">
-              <input id="event-type-${lowerCaseType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCaseType}">
+              <input id="event-type-${lowerCaseType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
               <label class="event__type-label  event__type-label--${lowerCaseType}" for="event-type-${lowerCaseType}-1">${type}</label>
             </div>`;
   }).join(``);
@@ -66,27 +80,27 @@ const getDestinationOptionsTemplate = (destinations) => {
   }).join(``);
 };
 
-const getEditTemplate = (point, defaultTripType = TRIP_TYPES[0]) => {
+const getEditTemplate = (pointData, offersList, destinationInfo) => {
   const {
+    price,
+    idPrefix,
     type,
-    destination,
     startDate,
     endDate,
-    price,
-    offerIds,
-    photos,
-    description,
-  } = point;
-  const isCreateForm = !Object.keys(point).length;
-  const tripType = isCreateForm ? defaultTripType : type;
+    resetButtonText,
+    isCreateMode,
+    offerTitles,
+  } = pointData;
+
+  const {offers} = offersList;
+
   const eventTypeItemsTemplate = getEventTypeListItemTemplate(TRIP_TYPES);
   const destinationItemsTemplate = getDestinationOptionsTemplate(TRIP_DESTINATIONS);
-  const formattedStartDate = isCreateForm ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
-  const formattedEndDate = isCreateForm ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
-  const resetButtonText = isCreateForm ? `Cancel` : `Delete`;
-  const offersTemplate = getOffersTemplate(OFFERS, isCreateForm ? [] : offerIds);
-  const destinationSectionTemplate = getDestinationSectionTemplate(description, photos);
-  const idPrefix = isCreateForm ? `1` : `2`;
+  const offersTemplate = getOffersTemplate(offers, isCreateMode, offerTitles);
+  const destinationSectionTemplate = getDestinationSectionTemplate(destinationInfo);
+
+  const formattedStartDate = isCreateMode ? `` : formatDate(startDate, `DD/MM/YY HH:mm`);
+  const formattedEndDate = isCreateMode ? `` : formatDate(endDate, `DD/MM/YY HH:mm`);
 
   return `<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -94,7 +108,7 @@ const getEditTemplate = (point, defaultTripType = TRIP_TYPES[0]) => {
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-${idPrefix}">
                       <span class="visually-hidden">Choose event type</span>
-                      <img class="event__type-icon" width="17" height="17" src="img/icons/${tripType.toLowerCase()}.png" alt="Event type icon">
+                      <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
                     </label>
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${idPrefix}" type="checkbox">
 
@@ -108,9 +122,9 @@ const getEditTemplate = (point, defaultTripType = TRIP_TYPES[0]) => {
 
                   <div class="event__field-group  event__field-group--destination">
                     <label class="event__label  event__type-output" for="event-destination-1">
-                      ${tripType}
+                      ${type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination || ``}" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationInfo.name || ``}" list="destination-list-1">
                     <datalist id="destination-list-1">
                       ${destinationItemsTemplate}
                     </datalist>
@@ -139,38 +153,132 @@ const getEditTemplate = (point, defaultTripType = TRIP_TYPES[0]) => {
                   </button>
                 </header>
                 <section class="event__details">
-                  <section class="event__section  event__section--offers">
-                    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-                    <div class="event__available-offers">
-                      ${offersTemplate}
-                    </div>
-                  </section>
+                  ${offersTemplate}
                   ${destinationSectionTemplate}
               </form>
             </li>`;
 };
 
-export default class EditPoint extends AbstractView {
-  constructor(point = {}) {
+export default class EditPoint extends Smart {
+  constructor(point = {}, offersList, destinationsList) {
     super();
-    this._point = point;
+    this._data = EditPoint.parsePointToData(point);
+    this._offersList = offersList;
+    this._destinationsList = destinationsList;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._clickHandler = this._clickHandler.bind(this);
+    this._offerToggleHandler = this._offerToggleHandler.bind(this);
+    this._pointTypeChangeHandler = this._pointTypeChangeHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
+    this._timeInputHandler = this._timeInputHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this.callbacks.submit(this._point);
+    this.callbacks.submit(EditPoint.parseDataToPoint(this._data));
   }
 
   _clickHandler(evt) {
     this.callbacks.click(evt);
   }
 
+  _offerToggleHandler(evt) {
+    evt.preventDefault();
+    const targetId = evt.target.id;
+    let offerTitlesCopy = this._data.offerTitles.slice();
+
+    if (offerTitlesCopy.includes(targetId)) {
+      offerTitlesCopy = offerTitlesCopy.filter((offer) => offer !== targetId);
+    } else {
+      offerTitlesCopy.push(targetId);
+    }
+
+    this.updateData({
+      offerTitles: offerTitlesCopy,
+    });
+  }
+
+  _pointTypeChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value
+    });
+  }
+
+  _destinationInputHandler(evt) {
+    const targetDestination = evt.target.value;
+    const isDestination = this._getPointDestination(this._destinationsList, evt.target.value);
+
+    this.updateData({
+      destination: targetDestination,
+    }, !isDestination);
+  }
+
+  _timeInputHandler(evt) {
+    const formattedDate = dayjs(evt.target.value, `DD/MM/YY HH:mm`).toDate();
+
+    if (evt.target.name === `event-start-time`) {
+      this.updateData({
+        startDate: formattedDate
+      }, true);
+    } else {
+      this.updateData({
+        endDate: formattedDate
+      }, true);
+    }
+  }
+
+  _priceInputHandler(evt) {
+    this.updateData({
+      price: evt.target.value
+    }, true);
+  }
+
+  _setInnerHandlers() {
+    const offersContainer = this.getElement()
+      .querySelector(`.event__available-offers`);
+
+    if (offersContainer) {
+      offersContainer.addEventListener(`change`, this._offerToggleHandler);
+    }
+
+    this.getElement()
+      .querySelector(`.event__type-group`)
+      .addEventListener(`change`, this._pointTypeChangeHandler);
+
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._destinationInputHandler);
+
+    this.getElement()
+      .querySelectorAll(`.event__input--time`)
+      .forEach((timeInput) => {
+        timeInput.addEventListener(`input`, this._timeInputHandler);
+      });
+
+    this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`input`, this._priceInputHandler);
+
+  }
+
+  _getPointOffer(offers) {
+    return offers.find(({type}) => type === this._data.type);
+  }
+
+  _getPointDestination(destinationsList, destination) {
+    return destinationsList.find(({name}) => name === destination);
+  }
+
   getTemplate() {
-    return getEditTemplate(this._point);
+    const offers = this._getPointOffer(this._offersList);
+    const destination = this._getPointDestination(this._destinationsList, this._data.destination);
+
+    return getEditTemplate(this._data, offers, destination);
   }
 
   setFormSubmitHandler(submitCallback) {
@@ -181,5 +289,42 @@ export default class EditPoint extends AbstractView {
   setClickHandler(clickCallback) {
     this.callbacks.click = clickCallback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._clickHandler);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this.callbacks.submit);
+    this.setClickHandler(this.callbacks.click);
+  }
+
+  static parsePointToData(point) {
+    const {
+      type,
+    } = point;
+    const defaultTripType = TRIP_TYPES[FIRST];
+    const isCreateMode = !Object.keys(point).length;
+    const resetButtonText = isCreateMode ? `Cancel` : `Delete`;
+    const idPrefix = isCreateMode ? `1` : `2`;
+
+    return Object.assign(
+        {},
+        point,
+        {
+          type: isCreateMode ? defaultTripType : type,
+          isCreateMode,
+          resetButtonText,
+          idPrefix,
+        }
+    );
+  }
+
+  static parseDataToPoint(data) {
+    let point = Object.assign({}, data);
+
+    delete point.isCreateMode;
+    delete point.resetButtonText;
+    delete point.idPrefix;
+
+    return point;
   }
 }

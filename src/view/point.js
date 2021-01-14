@@ -1,7 +1,5 @@
-import dayjs from "dayjs";
-
+import {dayjs} from "../utils/dayjs";
 import {formatDate} from "../utils/common";
-import {OFFERS} from "../const";
 import AbstractView from "./abstract";
 
 const SECOND = 1000;
@@ -26,8 +24,8 @@ const getDuration = (firstDate, secondDate) => {
   }
 };
 
-const getOfferItem = (offers, offerId) => {
-  const offer = offers.find((offerItem) => offerItem.id === offerId);
+const getOfferItem = (offers, title) => {
+  const offer = offers.find((offerItem) => offerItem.title === title);
 
   return `<li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>
@@ -36,8 +34,8 @@ const getOfferItem = (offers, offerId) => {
           </li>`;
 };
 
-const getPointTemplate = (point) => {
-  const {type, destination, startDate, endDate, price, isFavorite, offerIds} = point;
+const getPointTemplate = (point, offersList) => {
+  const {type, destination, startDate, endDate, price, isFavorite, offerTitles} = point;
   const date = formatDate(startDate, `MMM DD`);
   const startTime = formatDate(startDate, `HH:mm`);
   const startTimeUTC = formatDate(startDate, ``);
@@ -46,8 +44,10 @@ const getPointTemplate = (point) => {
   const duration = getDuration(startDate, endDate);
   const favoriteClassName = isFavorite ? `event__favorite-btn--active` : ``;
 
+  const pointOffer = offersList.find(({type: pointType}) => pointType === type);
+  const {offers} = pointOffer;
 
-  const offerTemplates = offerIds.map((id) => getOfferItem(OFFERS, id)).join(``);
+  const offerTemplates = offerTitles.length ? offerTitles.map((title) => getOfferItem(offers, title)).join(``) : ``;
 
   return `<li class="trip-events__item">
               <div class="event">
@@ -85,16 +85,17 @@ const getPointTemplate = (point) => {
 };
 
 export default class Point extends AbstractView {
-  constructor(point) {
+  constructor(point, offersList) {
     super();
     this._point = point;
+    this._offersList = offersList;
 
     this._clickHandler = this._clickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
-    return getPointTemplate(this._point);
+    return getPointTemplate(this._point, this._offersList);
   }
 
   _clickHandler(evt) {
