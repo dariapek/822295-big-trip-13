@@ -76,7 +76,8 @@ export default class Point {
     this._replaceFormToPoint();
   }
 
-  _handleFormSubmit() {
+  _handleFormSubmit(updatedPoint) {
+    this.init(updatedPoint);
     this._replaceFormToPoint();
   }
 
