@@ -293,8 +293,7 @@ export default class EditPoint extends Smart {
       this._startDateDatepicker = null;
     }
 
-    this._startDateDatepicker = flatpickr(
-        this.getElement().querySelector(`#event-start-time-1`),
+    this._startDateDatepicker = this._setDatepicker(`#event-start-time-1`,
         {
           enableTime: true,
           dateFormat: `d/m/Y H:i`,
@@ -310,8 +309,7 @@ export default class EditPoint extends Smart {
       this._endDateDatepicker = null;
     }
 
-    this._endDateDatepicker = flatpickr(
-        this.getElement().querySelector(`#event-end-time-1`),
+    this._endDateDatepicker = this._setDatepicker(`#event-end-time-1`,
         {
           enableTime: true,
           dateFormat: `d/m/Y H:i`,
@@ -319,6 +317,13 @@ export default class EditPoint extends Smart {
           minDate: this._data.startDate,
           onChange: this._startDayChangeHandler
         }
+    );
+  }
+
+  _setDatepicker(selector, flatpickrConfig) {
+    return flatpickr(
+        this.getElement().querySelector(selector),
+        flatpickrConfig
     );
   }
 
