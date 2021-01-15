@@ -6,7 +6,7 @@ import Smart from "./smart";
 
 import flatpickr from "flatpickr";
 
-import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import "flatpickr/dist/flatpickr.min.css";
 
 const getPhoto = (photo, alt) => {
 
