@@ -4,6 +4,10 @@ import {formatDate} from "../utils/common";
 import {TRIP_TYPES, TRIP_DESTINATIONS, FIRST} from "../const";
 import Smart from "./smart";
 
+import flatpickr from "flatpickr";
+
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
 const getPhoto = (photo, alt) => {
 
   return `<img class="event__photo" src="${photo}" alt="${alt}">`;
@@ -165,6 +169,8 @@ export default class EditPoint extends Smart {
     this._data = EditPoint.parsePointToData(point);
     this._offersList = offersList;
     this._destinationsList = destinationsList;
+    this._startDateDatepicker = null;
+    this._endDateDatepicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._clickHandler = this._clickHandler.bind(this);
@@ -173,8 +179,12 @@ export default class EditPoint extends Smart {
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._timeInputHandler = this._timeInputHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._startDayChangeHandler = this._startDayChangeHandler.bind(this);
+    this._endDayChangeHandler = this._endDayChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepickerStartDay();
+    this._setDatepickerEndDay();
   }
 
   _formSubmitHandler(evt) {
@@ -238,6 +248,18 @@ export default class EditPoint extends Smart {
     }, true);
   }
 
+  _startDayChangeHandler([startDate]) {
+    this.updateData({
+      startDate
+    }, true);
+  }
+
+  _endDayChangeHandler([endDate]) {
+    this.updateData({
+      endDate
+    }, true);
+  }
+
   _setInnerHandlers() {
     const offersContainer = this.getElement()
       .querySelector(`.event__available-offers`);
@@ -263,7 +285,40 @@ export default class EditPoint extends Smart {
     this.getElement()
       .querySelector(`.event__input--price`)
       .addEventListener(`input`, this._priceInputHandler);
+  }
 
+  _setDatepickerStartDay() {
+    if (this._startDateDatepicker) {
+      this._startDateDatepicker.destroy();
+      this._startDateDatepicker = null;
+    }
+
+    this._startDateDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/Y H:i`,
+          defaultDate: this._data.startDate,
+          onChange: this._startDayChangeHandler
+        }
+    );
+  }
+
+  _setDatepickerEndDay() {
+    if (this._endDateDatepicker) {
+      this._endDateDatepicker.destroy();
+      this._endDateDatepicker = null;
+    }
+
+    this._endDateDatepicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          enableTime: true,
+          dateFormat: `d/m/Y H:i`,
+          defaultDate: this._data.endDate,
+          onChange: this._startDayChangeHandler
+        }
+    );
   }
 
   _getPointOffer(offers) {
@@ -293,6 +348,8 @@ export default class EditPoint extends Smart {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepickerStartDay();
+    this._setDatepickerEndDay();
     this.setFormSubmitHandler(this.callbacks.submit);
     this.setClickHandler(this.callbacks.click);
   }
