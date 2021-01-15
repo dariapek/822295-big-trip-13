@@ -316,6 +316,7 @@ export default class EditPoint extends Smart {
           enableTime: true,
           dateFormat: `d/m/Y H:i`,
           defaultDate: this._data.endDate,
+          minDate: this._data.startDate,
           onChange: this._startDayChangeHandler
         }
     );
