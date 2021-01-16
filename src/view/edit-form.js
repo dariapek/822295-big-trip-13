@@ -360,6 +360,12 @@ export default class EditPoint extends Smart {
     this.setClickHandler(this.callbacks.click);
   }
 
+  removeElement() {
+    this._element = null;
+    this._startDateDatepicker.destroy();
+    this._endDateDatepicker.destroy();
+  }
+
   static parsePointToData(point) {
     const {
       type,
