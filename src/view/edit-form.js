@@ -288,15 +288,10 @@ export default class EditPoint extends Smart {
   }
 
   _setDatepickerStartDay() {
-    if (this._startDateDatepicker) {
-      this._startDateDatepicker.destroy();
-      this._startDateDatepicker = null;
-    }
-
-    this._startDateDatepicker = this._setDatepicker(`#event-start-time-1`,
+    this._startDateDatepicker = this._setDatepicker(
+        this._startDateDatepicker,
+        `#event-start-time-1`,
         {
-          enableTime: true,
-          dateFormat: `d/m/Y H:i`,
           defaultDate: this._data.startDate,
           onChange: this._startDayChangeHandler
         }
@@ -304,15 +299,10 @@ export default class EditPoint extends Smart {
   }
 
   _setDatepickerEndDay() {
-    if (this._endDateDatepicker) {
-      this._endDateDatepicker.destroy();
-      this._endDateDatepicker = null;
-    }
-
-    this._endDateDatepicker = this._setDatepicker(`#event-end-time-1`,
+    this._endDateDatepicker = this._setDatepicker(
+        this._endDateDatepicker,
+        `#event-end-time-1`,
         {
-          enableTime: true,
-          dateFormat: `d/m/Y H:i`,
           defaultDate: this._data.endDate,
           minDate: this._data.startDate,
           onChange: this._startDayChangeHandler
@@ -320,11 +310,23 @@ export default class EditPoint extends Smart {
     );
   }
 
-  _setDatepicker(selector, flatpickrConfig) {
-    return flatpickr(
-        this.getElement().querySelector(selector),
-        flatpickrConfig
+  _setDatepicker(datepicker, selector, config) {
+    if (datepicker) {
+      datepicker.destroy();
+      datepicker = null;
+    }
+
+    const defaults = {
+      enableTime: true,
+      dateFormat: `d/m/Y H:i`,
+    };
+
+    const flatpickrConfig = Object.assign({},
+        defaults,
+        config
     );
+
+    return flatpickr(this.getElement().querySelector(selector), flatpickrConfig);
   }
 
   _getPointOffer(offers) {
