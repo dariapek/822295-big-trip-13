@@ -169,7 +169,7 @@ export default class EditPoint extends Smart {
     this._data = EditPoint.parsePointToData(point);
     this._offersList = offersList;
     this._destinationsList = destinationsList;
-    this.datepickers = {};
+    this._datepickers = {};
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._clickHandler = this._clickHandler.bind(this);
@@ -310,8 +310,8 @@ export default class EditPoint extends Smart {
   }
 
   _setupDatepicker(name, selector, additionalConfig) {
-    if (this.datepickers[name]) {
-      this.datepickers[name].destroy();
+    if (this._datepickers[name]) {
+      this._datepickers[name].destroy();
     }
 
     const defaults = {
@@ -324,7 +324,7 @@ export default class EditPoint extends Smart {
         additionalConfig
     );
 
-    this.datepickers[name] = flatpickr(this.getElement().querySelector(selector), flatpickrConfig);
+    this._datepickers[name] = flatpickr(this.getElement().querySelector(selector), flatpickrConfig);
   }
 
   _getPointOffer(offers) {
@@ -363,7 +363,7 @@ export default class EditPoint extends Smart {
   removeElement() {
     super.removeElement();
 
-    Object.values(this.datepickers).forEach((datepicker) => datepicker.destroy());
+    Object.values(this._datepickers).forEach((datepicker) => datepicker.destroy());
   }
 
   static parsePointToData(point) {
