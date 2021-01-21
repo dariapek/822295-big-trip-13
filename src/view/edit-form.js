@@ -363,9 +363,7 @@ export default class EditPoint extends Smart {
   removeElement() {
     super.removeElement();
 
-    for (let name in this.datepickers) {
-      this.datepickers[name].destroy();
-    }
+    Object.values(this.datepickers).forEach((datepicker) => datepicker.destroy());
   }
 
   static parsePointToData(point) {
