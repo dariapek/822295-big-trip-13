@@ -363,7 +363,7 @@ export default class EditPoint extends Smart {
   }
 
   removeElement() {
-    this._element = null;
+    super.removeElement();
     this._startDateDatepicker.destroy();
     this._endDateDatepicker.destroy();
   }
