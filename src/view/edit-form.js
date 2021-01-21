@@ -169,8 +169,7 @@ export default class EditPoint extends Smart {
     this._data = EditPoint.parsePointToData(point);
     this._offersList = offersList;
     this._destinationsList = destinationsList;
-    this._startDateDatepicker = null;
-    this._endDateDatepicker = null;
+    this.datepickers = {};
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._clickHandler = this._clickHandler.bind(this);
@@ -288,8 +287,8 @@ export default class EditPoint extends Smart {
   }
 
   _setDatepickerStartDay() {
-    this._startDateDatepicker = this._setDatepicker(
-        this._startDateDatepicker,
+    this._setupDatepicker(
+        `startDate`,
         `#event-start-time-1`,
         {
           defaultDate: this._data.startDate,
@@ -299,8 +298,8 @@ export default class EditPoint extends Smart {
   }
 
   _setDatepickerEndDay() {
-    this._endDateDatepicker = this._setDatepicker(
-        this._endDateDatepicker,
+    this._setupDatepicker(
+        `endDate`,
         `#event-end-time-1`,
         {
           defaultDate: this._data.endDate,
@@ -310,10 +309,9 @@ export default class EditPoint extends Smart {
     );
   }
 
-  _setDatepicker(datepicker, selector, config) {
-    if (datepicker) {
-      datepicker.destroy();
-      datepicker = null;
+  _setupDatepicker(name, selector, additionalConfig) {
+    if (this.datepickers[name]) {
+      this.datepickers[name].destroy();
     }
 
     const defaults = {
@@ -323,10 +321,10 @@ export default class EditPoint extends Smart {
 
     const flatpickrConfig = Object.assign({},
         defaults,
-        config
+        additionalConfig
     );
 
-    return flatpickr(this.getElement().querySelector(selector), flatpickrConfig);
+    this.datepickers[name] = flatpickr(this.getElement().querySelector(selector), flatpickrConfig);
   }
 
   _getPointOffer(offers) {
@@ -364,8 +362,10 @@ export default class EditPoint extends Smart {
 
   removeElement() {
     super.removeElement();
-    this._startDateDatepicker.destroy();
-    this._endDateDatepicker.destroy();
+
+    for (let name in this.datepickers) {
+      this.datepickers[name].destroy();
+    }
   }
 
   static parsePointToData(point) {
